@@ -9,7 +9,20 @@ add_action('rest_api_init', function () {
                 $lat = get_post_meta($post->ID, 'afso_latitude', true);
                 $lng = get_post_meta($post->ID, 'afso_longitude', true);
                 $vid = get_post_meta($post->ID, 'afso_video_url', true);
-                $county = wp_get_post_terms($post->ID, 'county', ['fields' => 'names'])[0] ?? '';
+                $county_terms = wp_get_post_terms($post->ID, 'county');
+                $county = '';
+                $county_slug = '';
+                if (!is_wp_error($county_terms) && !empty($county_terms)) {
+                    $county = $county_terms[0]->name;
+                    $county_slug = $county_terms[0]->slug;
+                }
+                $icon_url = '';
+                if ($county_slug !== '') {
+                    $icon_rel_path = 'assets/icons/county/video-' . $county_slug . '.png';
+                    if (file_exists(AFSO_PATH . $icon_rel_path)) {
+                        $icon_url = AFSO_URL . $icon_rel_path;
+                    }
+                }
                 $data[] = [
                     'title' => get_the_title($post),
                     'lat' => (float) $lat,
@@ -19,6 +32,8 @@ add_action('rest_api_init', function () {
                     'link' => get_permalink($post),
                     'date' => get_post_meta($post->ID, 'afso_date_filmed', true),
                     'county' => $county,
+                    'county_slug' => $county_slug,
+                    'icon_url' => $icon_url,
                 ];
             }
             return rest_ensure_response($data);
