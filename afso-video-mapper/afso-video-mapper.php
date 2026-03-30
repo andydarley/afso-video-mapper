@@ -16,10 +16,3 @@ require_once AFSO_PATH . 'includes/enqueue-scripts.php';
 require_once AFSO_PATH . 'includes/csv-importer.php';
 require_once AFSO_PATH . 'includes/rest-endpoints.php';
 require_once AFSO_PATH . 'includes/shortcodes.php';
-
-add_filter('template_include', function ($template) {
-    if (is_tax('county')) {
-        return AFSO_PATH . 'templates/taxonomy-county.php';
-    }
-    return $template;
-});
