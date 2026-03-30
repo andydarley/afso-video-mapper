@@ -15,12 +15,11 @@ require_once AFSO_PATH . 'includes/register-post-type.php';
 require_once AFSO_PATH . 'includes/enqueue-scripts.php';
 require_once AFSO_PATH . 'includes/csv-importer.php';
 require_once AFSO_PATH . 'includes/rest-endpoints.php';
+require_once AFSO_PATH . 'includes/shortcodes.php';
 
 add_filter('template_include', function ($template) {
     if (is_tax('county')) {
         return AFSO_PATH . 'templates/taxonomy-county.php';
-    }/* elseif (is_singular('afso_videos')) {
-        return AFSO_PATH . 'templates/single-afso_videos.php';
-    }*/
+    }
     return $template;
 });

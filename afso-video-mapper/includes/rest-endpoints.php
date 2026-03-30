@@ -24,6 +24,7 @@ add_action('rest_api_init', function () {
                     }
                 }
                 $data[] = [
+                    'id' => (int) $post->ID,
                     'title' => get_the_title($post),
                     'lat' => (float) $lat,
                     'lng' => (float) $lng,

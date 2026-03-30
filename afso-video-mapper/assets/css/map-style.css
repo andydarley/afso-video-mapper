@@ -1,2 +1,24 @@
+.afso-video-map,
 #video-map,
-#single-video-map { height: 600px; margin-bottom: 20px; }
+#single-video-map {
+    height: 600px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.afso-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.afso-summary-table th,
+.afso-summary-table td {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.afso-summary-icon img {
+    display: block;
+}
