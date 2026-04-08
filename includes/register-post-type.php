@@ -19,6 +19,107 @@ function afso_register_post_type_and_taxonomy() {
         'label' => 'County',
         'hierarchical' => true,
         'rewrite' => array('slug' => 'county'),
+        'show_admin_column' => true,
     ));
 }
 add_action('init', 'afso_register_post_type_and_taxonomy');
+
+// Admin list filter: county dropdown on AFSO Videos screen.
+add_action('restrict_manage_posts', function ($post_type) {
+    if ($post_type !== 'afso_videos') return;
+
+    $selected = isset($_GET['county']) ? sanitize_text_field(wp_unslash($_GET['county'])) : '';
+    wp_dropdown_categories([
+        'show_option_all' => 'All counties',
+        'taxonomy' => 'county',
+        'name' => 'county',
+        'orderby' => 'name',
+        'selected' => $selected,
+        'hierarchical' => true,
+        'show_count' => false,
+        'hide_empty' => false,
+        'value_field' => 'slug',
+    ]);
+});
+
+// Admin list columns: sequence first, county and filmed date visible.
+add_filter('manage_afso_videos_posts_columns', function ($columns) {
+    $new_columns = [];
+
+    if (isset($columns['cb'])) {
+        $new_columns['cb'] = $columns['cb'];
+    }
+
+    $new_columns['afso_sequence'] = 'Sequence';
+
+    if (isset($columns['title'])) {
+        $new_columns['title'] = $columns['title'];
+    }
+
+    if (isset($columns['taxonomy-county'])) {
+        $new_columns['taxonomy-county'] = $columns['taxonomy-county'];
+    } else {
+        $new_columns['taxonomy-county'] = 'County';
+    }
+
+    $new_columns['afso_date_filmed'] = 'Date filmed';
+
+    if (isset($columns['date'])) {
+        $new_columns['date'] = $columns['date'];
+    }
+
+    return $new_columns;
+});
+
+add_action('manage_afso_videos_posts_custom_column', function ($column, $post_id) {
+    if ($column === 'afso_sequence') {
+        $sequence = get_post_meta($post_id, 'afso_sequence', true);
+        if ($sequence === '' || $sequence === null) {
+            echo '&mdash;';
+            return;
+        }
+
+        echo esc_html((string) $sequence);
+        return;
+    }
+
+    if ($column === 'afso_date_filmed') {
+        $raw = (string) get_post_meta($post_id, 'afso_date_filmed', true);
+        if ($raw === '') {
+            echo '&mdash;';
+            return;
+        }
+
+        $ts = strtotime($raw);
+        if ($ts === false) {
+            echo esc_html($raw);
+            return;
+        }
+
+        echo esc_html(date_i18n('j M Y, g:ia', $ts));
+    }
+}, 10, 2);
+
+add_filter('manage_edit-afso_videos_sortable_columns', function ($columns) {
+    $columns['afso_sequence'] = 'afso_sequence';
+    $columns['afso_date_filmed'] = 'afso_date_filmed';
+    return $columns;
+});
+
+add_action('pre_get_posts', function ($query) {
+    if (!is_admin() || !$query->is_main_query()) return;
+
+    if ($query->get('post_type') !== 'afso_videos') return;
+
+    $orderby = $query->get('orderby');
+
+    if ($orderby === 'afso_sequence') {
+        $query->set('meta_key', 'afso_sequence');
+        $query->set('orderby', 'meta_value_num');
+    }
+
+    if ($orderby === 'afso_date_filmed') {
+        $query->set('meta_key', 'afso_date_filmed');
+        $query->set('orderby', 'meta_value');
+    }
+});
