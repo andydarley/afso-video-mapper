@@ -22,15 +22,6 @@ function afso_register_post_type_and_taxonomy() {
         'show_admin_column' => true,
         'show_in_rest' => true,
     ));
-
-    // New taxonomy requested.
-    register_taxonomy('country', 'afso_videos', array(
-        'label' => 'Country',
-        'hierarchical' => true,
-        'rewrite' => array('slug' => 'country'),
-        'show_admin_column' => true,
-        'show_in_rest' => true,
-    ));
 }
 add_action('init', 'afso_register_post_type_and_taxonomy');
 
