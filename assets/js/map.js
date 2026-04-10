@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
         <div class="afso-modal__content"></div>
         <p class="afso-modal__date"></p>
-        <p class="afso-modal__link-wrap"><a class="afso-modal__link" href="#" target="_blank" rel="noopener">View Video</a></p>
+        <p class="afso-modal__link-wrap"><a class="afso-modal__link" href="#">View Video</a></p>
       </div>
     `;
 

@@ -57,11 +57,17 @@
     position: absolute;
     top: 0.35rem;
     right: 0.55rem;
-    border: 0;
-    background: transparent;
+    border: 0 !important;
+    background: transparent !important;
+    color: #111 !important;
     font-size: 1.8rem;
     line-height: 1;
     cursor: pointer;
+}
+
+.afso-modal__close:hover,
+.afso-modal__close:focus {
+    color: #000 !important;
 }
 
 .afso-modal__title {
